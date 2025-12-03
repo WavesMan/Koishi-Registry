@@ -24,15 +24,6 @@ jobs:
         with:
           run_install: false
 
-      - name: Setup SSH
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
-        run: |
-          mkdir -p ~/.ssh/
-          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-
       - name: Configure Git Identity
         run: |
           GIT_USER_NAME="${GIT_USER_NAME:-${GITHUB_ACTOR}}"
@@ -68,7 +59,7 @@ jobs:
           cp -r /tmp/public/* .
           echo "" > .nojekyll
           if [ -n "$CUSTOM_DOMAIN" ]; then echo "$CUSTOM_DOMAIN" > CNAME; fi
-          git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+          git remote set-url origin "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git"
           git add -A
           git commit -m "Deploy static site and JSON: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
           git push -f --set-upstream origin pages
