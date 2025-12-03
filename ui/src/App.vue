@@ -156,7 +156,8 @@ async function copyEndpoint() {
         <nav>
           <ul class="flex gap-6 text-gray-300">
             <li><a href="#" class="hover:text-blue-500 transition-colors">首页</a></li>
-            <li><a href="https://koishi.chat" target="_blank" class="hover:text-blue-500 transition-colors">文档</a></li>
+            <li><a href="https://github.com/WavesMan/Koishi-Registry" target="_blank" class="hover:text-blue-500 transition-colors">GitHub</a></li>
+            <li><a href="https://koishi.chat" target="_blank" class="hover:text-blue-500 transition-colors">Koishi文档</a></li>
           </ul>
         </nav>
       </div>
@@ -308,7 +309,7 @@ async function copyEndpoint() {
 
     <!-- Footer -->
     <footer class="border-t border-gray-700 py-8 text-center text-gray-500">
-      <p>&copy; {{ new Date().getFullYear() }} Koishi Registry. Powered by EdgeOne.</p>
+      <p>&copy; {{ new Date().getFullYear() }} Koishi Registry. Powered by WaveYo.</p>
     </footer>
   </div>
 </template>
