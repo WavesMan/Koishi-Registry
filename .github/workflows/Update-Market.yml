@@ -34,11 +34,13 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
 
       - name: Install Dependencies and Build
+        id: build_all
         run: |
           pnpm install --frozen-lockfile=false
           pnpm build
 
       - name: Generate JSON Data
+        if: ${{ success() }}
         env:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           CATEGORIES_API_BASE: ${{ secrets.CATEGORIES_API_BASE }}

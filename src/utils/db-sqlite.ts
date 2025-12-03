@@ -23,13 +23,13 @@ async function init() {
   } catch {
     db = new SQL.Database()
   }
+  db.exec(
+    'CREATE TABLE IF NOT EXISTS plugins (package_name TEXT PRIMARY KEY, package_version TEXT, data TEXT)'
+  )
+  db.exec(
+    'CREATE TABLE IF NOT EXISTS system_settings (id TEXT PRIMARY KEY, data TEXT)'
+  )
 }
-db.exec(
-  'CREATE TABLE IF NOT EXISTS plugins (package_name TEXT PRIMARY KEY, package_version TEXT, data TEXT)'
-)
-db.exec(
-  'CREATE TABLE IF NOT EXISTS system_settings (id TEXT PRIMARY KEY, data TEXT)'
-)
 
 class SqliteCollection {
   name: string
