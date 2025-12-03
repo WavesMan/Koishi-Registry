@@ -1,0 +1,37 @@
+{
+  "name": "koishi-registry",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js --server",
+    "scan": "node dist/index.js",
+    "dev": "concurrently \"npm run dev:ui\" \"npm run dev:server\"",
+    "dev:ui": "cd ui && pnpm dev",
+    "dev:server": "rolldown -c rolldown.config.js --watch",
+    "build": "npm run build:server && npm run build:ui",
+    "build:server": "rolldown -c rolldown.config.js",
+    "build:ui": "cd ui && pnpm build",
+    "lint": "biome check && biome lint",
+    "lint-fix": "biome format --write && biome lint --write"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "express": "^5.1.0",
+    "sql.js": "^1.9.0",
+    "node-cron": "^4.2.1",
+    "node-fetch": "^3.3.2",
+    "p-limit": "^7.1.0",
+    "semver": "^7.7.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.2",
+    "@types/node": "^24.3.0",
+    "@types/semver": "^7.7.0",
+    "concurrently": "^9.1.2",
+    "rolldown": "1.0.0-beta.34",
+    "typescript": "^5.9.2"
+  },
+  "packageManager": "pnpm@9.0.0"
+}

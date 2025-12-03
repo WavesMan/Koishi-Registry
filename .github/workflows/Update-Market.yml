@@ -1,0 +1,69 @@
+name: Sync JSON to EdgeOne Page
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  generate-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+          run_install: false
+
+      - name: Setup SSH
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$DEPLOY_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+      - name: Install Dependencies and Build
+        run: |
+          pnpm install --frozen-lockfile=false
+          pnpm build
+
+      - name: Generate JSON Data
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          CATEGORIES_API_BASE: ${{ secrets.CATEGORIES_API_BASE }}
+          CATEGORIES_API_URL: ${{ secrets.CATEGORIES_API_URL }}
+          INCREMENTAL_UPDATE: 'true'
+        run: pnpm run scan
+
+      - name: Deploy full static site to pages branch
+        env:
+          CUSTOM_DOMAIN: ${{ secrets.CUSTOM_DOMAIN }}
+          GIT_USER_NAME: ${{ secrets.GIT_USER_NAME }}
+          GIT_USER_EMAIL: ${{ secrets.GIT_USER_EMAIL }}
+        run: |
+          rm -rf /tmp/public
+          mkdir -p /tmp/public
+          cp -r public/* /tmp/public/
+          git checkout --orphan pages
+          git reset --hard
+          cp -r /tmp/public/* .
+          echo "" > .nojekyll
+          if [ -n "$CUSTOM_DOMAIN" ]; then echo "$CUSTOM_DOMAIN" > CNAME; fi
+          git remote set-url origin git@github.com:${GITHUB_REPOSITORY}.git
+          git config --global user.name "$GIT_USER_NAME"
+          git config --global user.email "$GIT_USER_EMAIL"
+          git add .
+          git commit -m "Deploy static site and JSON: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" || true
+          git push -f origin pages
