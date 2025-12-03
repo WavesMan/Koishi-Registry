@@ -55,7 +55,8 @@ jobs:
           mkdir -p /tmp/public
           cp -r public/* /tmp/public/
           git checkout --orphan pages
-          git reset --hard
+          git rm -rf . || true
+          git clean -fdx || true
           cp -r /tmp/public/* .
           echo "" > .nojekyll
           if [ -n "$CUSTOM_DOMAIN" ]; then echo "$CUSTOM_DOMAIN" > CNAME; fi
