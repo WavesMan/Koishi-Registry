@@ -11,7 +11,7 @@
     "dev:server": "rolldown -c rolldown.config.js --watch",
     "build": "npm run build:server && npm run build:ui",
     "build:server": "rolldown -c rolldown.config.js",
-    "build:ui": "cd ui && pnpm build",
+    "build:ui": "cd ui && pnpm install --frozen-lockfile=false && pnpm build",
     "lint": "biome check && biome lint",
     "lint-fix": "biome format --write && biome lint --write"
   },
