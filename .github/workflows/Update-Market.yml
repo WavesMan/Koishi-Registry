@@ -2,7 +2,7 @@ name: Sync JSON to EdgeOne Page
 
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '0 */2 * * *'
   push:
     branches: [main]
   workflow_dispatch:
